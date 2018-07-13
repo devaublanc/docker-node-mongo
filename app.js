@@ -2,31 +2,30 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 
-//DB setup
-// mongoose.connect("mongodb://mongo:27017/test");
-mongoose.connect("mongodb://localhost:27017/test");
+const nodeEnv = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
+//DB setup
+const mongoHost = nodeEnv === 'production' ? 'mongodb://mongo:27017/test' : 'mongodb://localhost:27017/test'
+mongoose.connect(mongoHost);
 
 const Fruit = mongoose.model('Fruit', { name: String });
 
 app.get('/', function(req, res){    
-    res.send("Hello World-changed-2");
+  res.send('Hello World (env=' + nodeEnv + ')');
 });
 
 app.get('/list', function(req, res){    
-    Fruit.find({},{}, function(e, docs){
-        console.log(docs)
-        res.send(docs);
-    });
-    
+  Fruit.find({},{}, function(e, docs){
+    res.send(docs);
+  });    
 });
 
 app.get('/add', function(req, res){
-    const pomme = new Fruit({ name: 'Pomme' });
-    pomme.save().then(() => res.send('Pomme saved'));
+  const pomme = new Fruit({ name: 'Pomme' });
+  pomme.save().then(() => res.send('Pomme saved'));
 });
 
 
 app.listen(3000, function(){
-  console.log('Example app listening on port 3000!');
+  console.log('Example app listening on port 3000 ! ');
 });

@@ -2,11 +2,13 @@ version: "2"
 services:
   web:
     build: .
+    environment:
+      - NODE_ENV=production
     volumes:
       - ./:/app
     ports:
-      - "3000:3000"
+      - "3002:3000"
   mongo:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
